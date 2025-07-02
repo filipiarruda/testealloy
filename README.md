@@ -1,4 +1,16 @@
 # Teste Técnico Alloy - To-Do List
+ ## Execução do projeto
+ - Para executar o projeto, copie o .env.example para .env, pois ele já possui todas as configurações mínimas para executar o projeto.
+ - Execute o comando `composer install` e o comando `npm install`
+ - Após isso, execute as migrations com `php artisan migrate`
+ - Após as migrações serem executadas corretamente, poderá iniciar o projeto com `composer run dev` ou se preferir com os comandos `php artisan serve` e `npm run dev`
+ - Como o projeto utiliza Jobs do Laravel, precisará iniciar o **queue worker do laravel** com o comando `php artisan queue:work`
+ 
+A versão do **Tailwind CSS** foi alterada para a versão 3, visando estabilidade na execução, e maior compatibilidade.
+
+As chamadas para as rotas são feitas via **Axios**, o cache e o **LocalStorage** utilizando o **Pinia**.
+
+O layout inspirado no exemplo do *devflow.html*
 
 ## Descrição do Projeto
 
