@@ -42,10 +42,15 @@ class TaskController extends Controller
         // Atualiza o status da tarefa
         $task->finalizado = !$task->finalizado;
         $task->save();
-        //Job que finaliza a task em definitivo, com a exclusão após 10 minutos
-        FinishTask::dispatch($task)->delay(Carbon::now()->addMinutes(10));
-        return response()->json([
-            'message' => "Agendamos a remoção da task {$task->id} ."]);
+        if ($task->finalizado) {
+            //Job que finaliza a task em definitivo, com a exclusão após 10 minutos
+            FinishTask::dispatch($task)->delay(Carbon::now()->addMinutes(10));
+            return response()->json([
+                'message' => "Agendamos a remoção da task {$task->id} ."]);
+        } else {
+            return response()->json([
+                'message' => "Task {$task->id} marcada como pendente."]);
+        }
     }
 }
 

@@ -56,7 +56,7 @@ function formatarData(dataLimite) {
             class="flex flex-col flex-1 cursor-pointer"
             @click="editTask(task)"
         >
-            <span class="font-semibold text-gray-800">{{ task.nome }}</span>
+            <span class="font-semibold text-gray-800" :class="{ 'finished-task-title': task.finalizado }">{{ task.nome }}</span>
             <span
 
                 class="mt-1 px-3 py-1 w-fit rounded-full text-xs font-semibold"
