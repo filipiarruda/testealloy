@@ -11,11 +11,12 @@ export const useTaskStore = defineStore('task', {
       this.lastUpdated = Date.now();
     },
     async fetchTasks(force = false) {
-      if (!force && this.lastUpdated && (DataTransfer.now() - this.lastUpdated < 60000)) {
-        return;
+      // Cache de 1 minuto
+      if (!force && this.lastFetch && Date.now() - this.lastFetch < 60000) {
+        return; // Usa o cache
       }
       const response = await axios.get('/tasks');
-      this.setTasks(response.tasks);
+      this.setTasks(response.data.tasks);
     },
     addTask(task) {
       this.tasks.push(task);

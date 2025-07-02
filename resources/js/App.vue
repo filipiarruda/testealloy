@@ -14,14 +14,13 @@ const isModalVisible = ref(false);
 // Estado para guardar a tarefa que está sendo editada, ou null se for uma nova
 const selectedTask = ref(null);
 
-// Abre o modal para criar uma nova tarefa
+//Modal nova task
 const openCreateModal = () => {
-  console.log('Evento create-task recebido!');
   selectedTask.value = null; // Garante que o formulário estará vazio
   isModalVisible.value = true;
 };
 
-// Abre o modal para editar uma tarefa existente (será usado pelo TasksContainer)
+//Editar
 const openEditModal = (task) => {
   selectedTask.value = { ...task }; // Passa uma cópia para evitar mutação direta
   isModalVisible.value = true;
@@ -44,20 +43,23 @@ const handleSaveTask = async (taskData) => {
       const response = await axios.put(`/tasks/${taskData.id}`, taskData);
       taskStore.updateTask(response.data.task);
     }
-    const response = await axios.get('/tasks');
-    taskStore.setTasks(response.data.tasks);
+    await taskStore.fetchTasks(true);
     closeModal();
   } catch (error) {
     console.error('Erro ao salvar tarefa:', error);
-    // Aqui você pode exibir um alerta ou mensagem de erro para o usuário
   }
+};
+
+const handleUpdateStatus = async (task) => {
+  await axios.put(`/tasks/${task.id}`, { ...task, finalizado: !task.finalizado });
+  await taskStore.fetchTasks(true);
 };
 </script>
 
 <template>
   <div class="content-tasks">
     <Appbar @create-task="openCreateModal" />
-    <TasksContainer @edit-task="openEditModal" />
+    <TasksContainer @edit-task="openEditModal" @update-status="handleUpdateStatus" />
     <Footer />
     <TaskModal :show="isModalVisible" :task="selectedTask" @close="closeModal" @save="handleSaveTask" />
   </div>

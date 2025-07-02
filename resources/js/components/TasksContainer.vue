@@ -4,30 +4,20 @@ import { useTaskStore } from "@/stores/taskStore.js";
 import { onMounted } from "vue";
 import axios from "axios";
 import { Trash, CheckCircle } from "lucide-vue-next";
-const emit = defineEmits(["edit-task"]);
+const emit = defineEmits(["edit-task", "update-status"]);
 
 const taskStore = useTaskStore();
 
-const fetchTasks = async () => {
-    try {
-        const response = await axios.get("/tasks");
-        taskStore.setTasks(response.data.tasks);
-    } catch (error) {
-        console.error("Erro ao buscar tarefas:", error);
-    }
-};
-
 onMounted(() => {
-    fetchTasks();
+    taskStore.fetchTasks();
 });
 
 const editTask = (task) => {
     emit("edit-task", task);
 };
 
-// Função para formatar a data
 function formatarData(dataLimite) {
-    if (!dataLimite) return "";
+    if (!dataLimite) return "Sem data definida";
     const hoje = new Date();
     const data = new Date(dataLimite);
     hoje.setHours(0, 0, 0, 0);
@@ -54,14 +44,13 @@ function formatarData(dataLimite) {
         v-for="task in taskStore.tasks"
         :key="task.id"
         class="task-item-example flex items-center justify-between bg-white rounded-lg shadow p-4 mb-3"
-        @click="editTask(task)"
     >
         <!-- Checkbox à esquerda -->
         <input
             type="checkbox"
             class="mr-4 text-green-600 rounded bg-green-600 focus:ring-green-500 h-4 w-4 task-custom-checkbox"
             :checked="task.finalizado"
-            @change="$emit('toggle-task', task)"
+            @change="$emit('update-status', task)"
         />
         <div
             class="flex flex-col flex-1 cursor-pointer"
@@ -69,7 +58,7 @@ function formatarData(dataLimite) {
         >
             <span class="font-semibold text-gray-800">{{ task.nome }}</span>
             <span
-                v-if="task.data_limite"
+
                 class="mt-1 px-3 py-1 w-fit rounded-full text-xs font-semibold"
                 :class="{
                     'bg-green-100 text-green-800':
@@ -85,10 +74,10 @@ function formatarData(dataLimite) {
             </span>
         </div>
         <button
-      class="ml-4 w-10 h-10 bg-white text-gray-900 rounded-full flex items-center justify-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray transition"
-    >
-      <Trash class="w-5 h-5 text-gray-900" />
-    </button>
+            class="ml-4 w-10 h-10 bg-white text-gray-900 rounded-full flex items-center justify-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray transition"
+        >
+            <Trash class="w-5 h-5 text-gray-900" />
+        </button>
     </div>
 </template>
 
@@ -115,12 +104,5 @@ function formatarData(dataLimite) {
     border-radius: 5px;
     border: 1px solid #ccc;
     cursor: pointer;
-}
-
-.checkbox.w--redirected-checked {
-    background-color: #1fb76c;
-    background-size: 16px;
-    border-color: #1fb76c;
-    border-radius: 4px;
 }
 </style>
