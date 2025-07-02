@@ -51,7 +51,7 @@ const handleSaveTask = async (taskData) => {
 };
 
 const handleUpdateStatus = async (task) => {
-  await axios.put(`/tasks/${task.id}`, { ...task, finalizado: !task.finalizado });
+  await axios.post(`/tasks/${task.id}/status`, { ...task, finalizado: !task.finalizado });
   await taskStore.fetchTasks(true);
 };
 </script>

@@ -12,3 +12,6 @@ Route::get('/tasks', [TaskController::class, 'index'])
 Route::post('/tasks', [TaskController::class, 'store']);
 Route::put('/tasks/{task}', [TaskController::class, 'update'])
     ->name('tasks.update');
+
+Route::post('/tasks/{task}/status', [TaskController::class, 'updateStatus'])
+    ->name('tasks.updateStatus');
